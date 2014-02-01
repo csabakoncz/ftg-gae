@@ -31,19 +31,35 @@ import com.google.gwt.user.client.ui.Widget;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class Main implements EntryPoint {
+
+	private static final String TEXT_ID = "text";
+	private static final String GAP_ELEMENT = "em";
+
+	private static final String ID = "id";
+
+	private static final String NEWLINE = "\n";
+	private static final String NBSP = "&nbsp;";
+	private static final String PROP_PADDING_LEFT = "paddingLeft";
+
+	private static final String STYLE_GAP_PANEL = "gapPanel";
+	private static final String STYLE_CHOICE_WORD = "choiceWord";
+	private static final String STYLE_GUESSED_WORD = "guessedWord";
+	private static final String STYLE_CORRECT_WORD = "correctWord";
+	private static final String STYLE_INCORRECT_WORD = "incorrectWord";
+	
 	private FlowPanel choicesPanel;
 	private HTMLPanel puzzleArea;
 	PickupDragController dragController;
 	private Button checkResultsButton;
 
 	public void onModuleLoad() {
-		Element text = Document.get().getElementById("text");
+		Element text = Document.get().getElementById(TEXT_ID);
 		producePuzzle(text);
 	}
 
 	private void producePuzzle(Element text) {
 
-		NodeList<Element> divs = text.getElementsByTagName("em");
+		NodeList<Element> divs = text.getElementsByTagName(GAP_ELEMENT);
 
 		dragController = new PickupDragController(RootPanel.get(), false);
 		choicesPanel = new FlowPanel();
@@ -61,8 +77,8 @@ public class Main implements EntryPoint {
 			String nodeValue = item.getInnerText();
 			entries.add(nodeValue);
 
-			String idVal = "__id_" + i;
-			item.setAttribute("id", idVal);
+			String idVal = createId(i);
+			item.setAttribute(ID, idVal);
 
 			int nodeTextLen = nodeValue.length();
 
@@ -88,7 +104,7 @@ public class Main implements EntryPoint {
 		// now remove the ids:
 		for (int i = 0; i < length; i++) {
 			Element item = divs.getItem(i);
-			item.removeAttribute("id");
+			item.removeAttribute(ID);
 		}
 
 		// make it possible to drag words back from the text:
@@ -116,7 +132,7 @@ public class Main implements EntryPoint {
 			SimpleDropController sdc = createDropController(l);
 
 			dragController.registerDropController(sdc);
-			String idVal = "__id_" + i;
+			String idVal = createId(i);
 			puzzleArea.addAndReplaceElement(l, idVal);
 		}
 
@@ -127,6 +143,11 @@ public class Main implements EntryPoint {
 		RootPanel.get().add(checkResultsButton);
 		configureCheckHandler(entries, gaps);
 
+	}
+
+	private String createId(int i) {
+		String idVal = "__id_" + i;
+		return idVal;
 	}
 
 	private void configureCheckHandler(final List<String> entries,
@@ -147,8 +168,8 @@ public class Main implements EntryPoint {
 						String text = ((Label) widget).getText();
 						String expectedString = entries.get(i);
 						if (false == expectedString.equals(text)) {
-							widget.removeStyleName("correctWord");
-							widget.addStyleName("incorrectWord");
+							widget.removeStyleName(STYLE_CORRECT_WORD);
+							widget.addStyleName(STYLE_INCORRECT_WORD);
 							errors++;
 						}
 					} else {
@@ -196,8 +217,8 @@ public class Main implements EntryPoint {
 
 			private Label createGuessedWord(String text) {
 				final Label il = new InlineLabel(text);
-				il.addStyleName("correctWord");
-				il.addStyleName("guessedWord");
+				il.addStyleName(STYLE_CORRECT_WORD);
+				il.addStyleName(STYLE_GUESSED_WORD);
 				return il;
 			};
 		};
@@ -211,23 +232,23 @@ public class Main implements EntryPoint {
 		{
 			// append a newline so that the choices can wrap:
 			Text newLine = com.google.gwt.dom.client.Document.get()
-					.createTextNode("\n");
+					.createTextNode(NEWLINE);
 			choicesPanel.getElement().appendChild(newLine);
 		}
 	}
 
 	private FlowPanel createGapPanel(int longestText) {
 		final FlowPanel l = new FlowPanel();
-		l.addStyleName("gapPanel");
+		l.addStyleName(STYLE_GAP_PANEL);
 		l.getElement().getStyle().setDisplay(Display.INLINE);
 		l.getElement().getStyle().setPosition(Position.RELATIVE);
 
 		// create an invisible element that ensures the gap size:
 		InlineLabel invisibleLabel = new InlineLabel();
-		invisibleLabel.getElement().setInnerHTML("&nbsp;");
+		invisibleLabel.getElement().setInnerHTML(NBSP);
 		final String longestTextPadding = longestText + "em";
 		invisibleLabel.getElement().getStyle()
-				.setProperty("paddingLeft", longestTextPadding);
+				.setProperty(PROP_PADDING_LEFT, longestTextPadding);
 		l.add(invisibleLabel);
 
 		return l;
@@ -235,8 +256,8 @@ public class Main implements EntryPoint {
 
 	private Label createChoiceLabel(String nodeValue) {
 		Label l = new InlineLabel(nodeValue);
-		l.addStyleName("correctWord");
-		l.addStyleName("choiceWord");
+		l.addStyleName(STYLE_CORRECT_WORD);
+		l.addStyleName(STYLE_CHOICE_WORD);
 		return l;
 	}
 }
