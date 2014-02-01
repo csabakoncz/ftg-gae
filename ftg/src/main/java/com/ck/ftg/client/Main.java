@@ -1,18 +1,23 @@
 package com.ck.ftg.client;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.allen_sauer.gwt.dnd.client.DragContext;
 import com.allen_sauer.gwt.dnd.client.PickupDragController;
 import com.allen_sauer.gwt.dnd.client.drop.SimpleDropController;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Text;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -20,13 +25,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.xml.client.Document;
-import com.google.gwt.xml.client.Element;
-import com.google.gwt.xml.client.Node;
-import com.google.gwt.xml.client.NodeList;
-import com.google.gwt.xml.client.XMLParser;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
@@ -38,58 +37,13 @@ public class Main implements EntryPoint {
 	private Button checkResultsButton;
 
 	public void onModuleLoad() {
-		String text = "Alma a <e>fa</e> alatt, nyári  <e>piros alma</e>. "
-				+ "Engem szid, meg minden. ";
-		text = text + text;
-		text = text + text;
-
-		String parameter = com.google.gwt.user.client.Window.Location
-				.getParameter("test");
-		if (parameter == null) {
-			producePuzzle(text);
-		} else {
-			final TextArea ta = new TextArea();
-			RootPanel.get().add(ta);
-
-			ta.setText(text);
-			Button b = new Button("Process");
-			RootPanel.get().add(b);
-
-			b.addClickHandler(new ClickHandler() {
-
-				public void onClick(ClickEvent event) {
-					producePuzzle(ta.getText());
-				}
-
-			});
-		}
+		Element text = Document.get().getElementById("text");
+		producePuzzle(text);
 	}
 
-	private void producePuzzle(String text) {
-		String xmlText = "<d>" + text + "</d>";
-		Document puzzleDoc = XMLParser.parse(xmlText);
+	private void producePuzzle(Element text) {
 
-		NodeList divs = puzzleDoc.getElementsByTagName("e");
-		int length = divs.getLength();
-
-		//create id attributes
-		for(int i=0; i<length; i++){
-			Node item = divs.item(i);
-			if(item instanceof Element){
-				((Element)item).setAttribute("id", "id1");
-			}
-		}
-		
-		String textWithIds = puzzleDoc.getDocumentElement().toString();
-		//strip the starting <d> and ending </d>:
-		int textLen=textWithIds.length();
-		textWithIds=textWithIds.substring(3,textLen-4);
-
-		if (choicesPanel != null) {
-			choicesPanel.removeFromParent();
-			puzzleArea.removeFromParent();
-			checkResultsButton.removeFromParent();
-		}
+		NodeList<Element> divs = text.getElementsByTagName("em");
 
 		dragController = new PickupDragController(RootPanel.get(), false);
 		choicesPanel = new FlowPanel();
@@ -98,13 +52,17 @@ public class Main implements EntryPoint {
 		RootPanel.get().add(choicesPanel);
 
 		final List<String> entries = new ArrayList<String>();
-		List<String> ids = new ArrayList<String>();
 
+		int length = divs.getLength();
 		int longestText = 0;
-
 		for (int i = 0; i < length; i++) {
-			Node item = divs.item(i);
-			String nodeValue = item.getFirstChild().getNodeValue();
+			Element item = divs.getItem(i);
+
+			String nodeValue = item.getInnerText();
+			entries.add(nodeValue);
+
+			String idVal = "__id_" + i;
+			item.setAttribute("id", idVal);
 
 			int nodeTextLen = nodeValue.length();
 
@@ -112,13 +70,25 @@ public class Main implements EntryPoint {
 				longestText = nodeTextLen;
 			}
 
-			String id = ((Element) item).getAttribute("id");
+		}
 
-			createChoice(nodeValue);
+		{
+			// randomize the choices:
+			List<String> randomEntries = new ArrayList<String>(entries);
+			for (int index = 0; index < (length - 1); index++) {
+				int newIndex = index + Random.nextInt(length - index);
+				Collections.swap(randomEntries, index, newIndex);
+			}
+			for (String string : randomEntries) {
+				createChoice(string);
+			}
+		}
 
-			entries.add(nodeValue);
-			ids.add(id);
-
+		String textWithIds = text.getInnerHTML();
+		// now remove the ids:
+		for (int i = 0; i < length; i++) {
+			Element item = divs.getItem(i);
+			item.removeAttribute("id");
 		}
 
 		// make it possible to drag words back from the text:
@@ -131,53 +101,23 @@ public class Main implements EntryPoint {
 				}
 			}
 		};
+
 		dragController.registerDropController(choicesPanelDropController);
 
 		puzzleArea = new HTMLPanel(textWithIds);
 		final List<FlowPanel> gaps = new ArrayList<FlowPanel>();
-		for (String id : ids) {
+
+		for (int i = 0; i < length; i++) {
 
 			final FlowPanel l = createGapPanel(longestText);
 
 			gaps.add(l);
 
-			SimpleDropController sdc = new SimpleDropController(l) {
-				public void onDrop(DragContext context) {
-					if (context.draggable instanceof Label) {
-
-						Label sourceLabel = (Label) context.draggable;
-
-						// check if we already have a label:
-						int widgetCount = l.getWidgetCount();
-
-						if (widgetCount == 2) {
-
-							Widget widget = l.getWidget(1);
-							// we must remove it and its content put back to the
-							// choices panel:
-							Label existingLabel = (Label) widget;
-							createChoice(existingLabel.getText());
-							existingLabel.removeFromParent();
-						}
-
-						final Label il = createGuessedWord(sourceLabel
-								.getText());
-						l.add(il);
-						il.getElement().getStyle().setTop(0, Unit.PX);
-						dragController.makeDraggable(il);
-					}
-				}
-
-				private Label createGuessedWord(String text) {
-					final Label il = new InlineLabel(text);
-					il.addStyleName("correctWord");
-					il.addStyleName("guessedWord");
-					return il;
-				};
-			};
+			SimpleDropController sdc = createDropController(l);
 
 			dragController.registerDropController(sdc);
-			puzzleArea.addAndReplaceElement(l, id);
+			String idVal = "__id_" + i;
+			puzzleArea.addAndReplaceElement(l, idVal);
 		}
 
 		puzzleArea.addStyleName("puzzleArea");
@@ -185,6 +125,12 @@ public class Main implements EntryPoint {
 
 		checkResultsButton = new Button("Check Result");
 		RootPanel.get().add(checkResultsButton);
+		configureCheckHandler(entries, gaps);
+
+	}
+
+	private void configureCheckHandler(final List<String> entries,
+			final List<FlowPanel> gaps) {
 		checkResultsButton.addClickHandler(new ClickHandler() {
 
 			public void onClick(ClickEvent event) {
@@ -219,7 +165,43 @@ public class Main implements EntryPoint {
 				dialogBox.center();
 			}
 		});
+	}
 
+	private SimpleDropController createDropController(final FlowPanel l) {
+		SimpleDropController sdc = new SimpleDropController(l) {
+			public void onDrop(DragContext context) {
+				if (context.draggable instanceof Label) {
+
+					Label sourceLabel = (Label) context.draggable;
+
+					// check if we already have a label:
+					int widgetCount = l.getWidgetCount();
+
+					if (widgetCount == 2) {
+
+						Widget widget = l.getWidget(1);
+						// we must remove it and its content put back to the
+						// choices panel:
+						Label existingLabel = (Label) widget;
+						createChoice(existingLabel.getText());
+						existingLabel.removeFromParent();
+					}
+
+					final Label il = createGuessedWord(sourceLabel.getText());
+					l.add(il);
+					il.getElement().getStyle().setTop(0, Unit.PX);
+					dragController.makeDraggable(il);
+				}
+			}
+
+			private Label createGuessedWord(String text) {
+				final Label il = new InlineLabel(text);
+				il.addStyleName("correctWord");
+				il.addStyleName("guessedWord");
+				return il;
+			};
+		};
+		return sdc;
 	}
 
 	private void createChoice(String nodeValue) {
@@ -227,7 +209,7 @@ public class Main implements EntryPoint {
 		choicesPanel.add(l);
 		dragController.makeDraggable(l);
 		{
-			//append a newline so that the choices can wrap:
+			// append a newline so that the choices can wrap:
 			Text newLine = com.google.gwt.dom.client.Document.get()
 					.createTextNode("\n");
 			choicesPanel.getElement().appendChild(newLine);
