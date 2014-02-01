@@ -17,7 +17,6 @@
 	
 	<!-- Other module inherits -->
 	<inherits name="com.allen_sauer.gwt.dnd.gwt-dnd" />
-	<inherits name="com.google.gwt.xml.XML" />
 
 	<!-- Specify the app entry point class. -->
 	<entry-point class='com.ck.ftg.client.Main' />
