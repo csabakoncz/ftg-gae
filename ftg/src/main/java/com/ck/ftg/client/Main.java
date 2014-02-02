@@ -23,10 +23,13 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -40,6 +43,8 @@ public class Main implements EntryPoint {
 	private static final String ID_checkButton = "checkButton";
 	private static final String ID_loadingIndicator = "loadingIndicator";
 	
+	private static final String ID_dialogTitle = "dialogTitle";
+	private static final String ID_dialogOK = "dialogOK";
 	private static final String ID_correctMsg = "correctMsg";
 	private static final String ID_errorsMsg = "errorsMsg";
 	private static final String ID_errorsAndUnfilledMsg = "errorsAndUnfilledMsg";
@@ -213,12 +218,36 @@ public class Main implements EntryPoint {
 					msg=getErrorsAndUnfilledMsg(errors, unfilledCount);
 				}
 
-				DialogBox dialogBox = new DialogBox(true, false);
-				dialogBox.setText(msg);
+				final DialogBox dialogBox = new DialogBox(false, true);
+				dialogBox.setText(getDialogTitle());
+				VerticalPanel vp=new VerticalPanel();
+				dialogBox.setWidget(vp);
+				HTML msgLabel = new HTML(msg);
+				vp.add(msgLabel);
+				vp.setCellHorizontalAlignment(msgLabel, HasHorizontalAlignment.ALIGN_LEFT);
+				Button closeButton=new Button(getDialogOK());
+				vp.add(closeButton);
+				vp.setCellHorizontalAlignment(closeButton, HasHorizontalAlignment.ALIGN_RIGHT);
+				closeButton.addClickHandler(new ClickHandler() {
+					
+					public void onClick(ClickEvent event) {
+						dialogBox.hide();
+					}
+				});
 				dialogBox.center();
 			}
 
 		});
+	}
+
+	protected String getDialogOK() {
+		String msg = RootPanel.get(ID_dialogOK).getElement().getInnerText();
+		return msg;
+	}
+
+	protected String getDialogTitle() {
+		String msg = RootPanel.get(ID_dialogTitle).getElement().getInnerText();
+		return msg;
 	}
 
 	private String getCorrectMsg() {
