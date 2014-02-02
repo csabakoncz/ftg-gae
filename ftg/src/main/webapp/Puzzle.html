@@ -1,9 +1,4 @@
 <!doctype html>
-<!-- The DOCTYPE declaration above will set the     -->
-<!-- browser's rendering engine into                -->
-<!-- "Standards Mode". Replacing this declaration   -->
-<!-- with a "Quirks Mode" doctype is not supported. -->
-
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -13,28 +8,11 @@
     <!--                                                               -->
     <link type="text/css" rel="stylesheet" href="Puzzle.css">
 
-    <!--                                           -->
-    <!-- Any title is fine                         -->
-    <!--                                           -->
     <title>Fill-the-gap exercise</title>
-    
-    <!--                                           -->
-    <!-- This script loads your compiled module.   -->
-    <!-- If you add any GWT meta tags, they must   -->
-    <!-- be added before this line.                -->
-    <!--                                           -->
-    <script type="text/javascript" language="javascript" src="ftg/ftg.nocache.js"></script>
+
   </head>
 
-  <!--                                           -->
-  <!-- The body can have arbitrary html, or      -->
-  <!-- you can leave the body empty if you want  -->
-  <!-- to create a completely dynamic UI.        -->
-  <!--                                           -->
   <body>
-
-    <!-- OPTIONAL: include this if you want history support -->
-    <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
     
     <!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
     <noscript>
@@ -43,6 +21,8 @@
         in order for this application to display correctly.
       </div>
     </noscript>
+
+	<img src="ajax-loader.gif" id="loadingIndicator" style="position: absolute;left: 50%; top:50%"></img>
 	
 	<div id="text" style="display: none;">
 Quo usque tandem <em>abutere</em>, Catilina, patientia nostra? Quam diu etiam <em>furor</em> iste tuus nos eludet? Quem ad finem sese effrenata iactabit <em>audacia</em>?
@@ -58,6 +38,7 @@ Nihilne te nocturnum praesidium <em>Palati</em>, nihil urbis vigiliae, nihil tim
 	<div id="errorsMsg"  style="display: none;">{0} errors</div>
 	<div id="errorsAndUnfilledMsg"  style="display: none;">{0} errors, {1} unfilled</div>
 	<div id="unfilledMsg"  style="display: none;">{0} unfilled</div>
-	
+
+    <script type="text/javascript" language="javascript" src="ftg/ftg.nocache.js"></script>	
   </body>
 </html>

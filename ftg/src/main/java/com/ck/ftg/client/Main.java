@@ -12,6 +12,7 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
@@ -37,6 +38,7 @@ public class Main implements EntryPoint {
 	private static final String ID_choicesPanel = "choicesPanel";
 	private static final String ID_puzzleArea = "puzzleArea";
 	private static final String ID_checkButton = "checkButton";
+	private static final String ID_loadingIndicator = "loadingIndicator";
 	
 	private static final String ID_correctMsg = "correctMsg";
 	private static final String ID_errorsMsg = "errorsMsg";
@@ -66,6 +68,12 @@ public class Main implements EntryPoint {
 	public void onModuleLoad() {
 		Element text = Document.get().getElementById(ID_TEXT);
 		producePuzzle(text);
+		hideElement(ID_loadingIndicator);
+	}
+
+	private void hideElement(String id) {
+		Style style = Document.get().getElementById(id).getStyle();
+		style.setDisplay(Display.NONE);
 	}
 
 	private void producePuzzle(Element text) {
