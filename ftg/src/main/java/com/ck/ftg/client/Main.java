@@ -1,5 +1,6 @@
 package com.ck.ftg.client;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -32,7 +33,17 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class Main implements EntryPoint {
 
-	private static final String TEXT_ID = "text";
+	private static final String ID_TEXT = "text";
+	private static final String ID_choicesPanel = "choicesPanel";
+	private static final String ID_puzzleArea = "puzzleArea";
+	private static final String ID_checkButton = "checkButton";
+	
+	private static final String ID_correctMsg = "correctMsg";
+	private static final String ID_errorsMsg = "errorsMsg";
+	private static final String ID_errorsAndUnfilledMsg = "errorsAndUnfilledMsg";
+	private static final String ID_unfilledMsg = "unfilledMsg";
+	
+	
 	private static final String GAP_ELEMENT = "em";
 
 	private static final String ID = "id";
@@ -53,7 +64,7 @@ public class Main implements EntryPoint {
 	private Button checkResultsButton;
 
 	public void onModuleLoad() {
-		Element text = Document.get().getElementById(TEXT_ID);
+		Element text = Document.get().getElementById(ID_TEXT);
 		producePuzzle(text);
 	}
 
@@ -63,9 +74,7 @@ public class Main implements EntryPoint {
 
 		dragController = new PickupDragController(RootPanel.get(), false);
 		choicesPanel = new FlowPanel();
-		choicesPanel.addStyleName("choicesPanel");
-
-		RootPanel.get().add(choicesPanel);
+		RootPanel.get(ID_choicesPanel).add(choicesPanel);
 
 		final List<String> entries = new ArrayList<String>();
 
@@ -136,11 +145,11 @@ public class Main implements EntryPoint {
 			puzzleArea.addAndReplaceElement(l, idVal);
 		}
 
-		puzzleArea.addStyleName("puzzleArea");
-		RootPanel.get().add(puzzleArea);
+		RootPanel.get(ID_puzzleArea).add(puzzleArea);
 
-		checkResultsButton = new Button("Check Result");
-		RootPanel.get().add(checkResultsButton);
+		Element checkButton = Document.get().getElementById(ID_checkButton);
+		checkResultsButton = Button.wrap(checkButton);
+
 		configureCheckHandler(entries, gaps);
 
 	}
@@ -177,15 +186,47 @@ public class Main implements EntryPoint {
 					}
 				}
 
-				String msg = "Correct!";
-				if (errors > 00 || unfilledCount > 0) {
-					msg = errors + " errors, " + unfilledCount + " unfilled";
+				String msg;
+				
+				if(errors==0 && unfilledCount==0){
+					msg = getCorrectMsg();
+				}else if(errors==0){
+					msg=getUnfillesMsg(unfilledCount);
 				}
+				else if(unfilledCount==0){
+					msg=getErrorsMsg(errors);
+				}
+				else{
+					msg=getErrorsAndUnfilledMsg(errors, unfilledCount);
+				}
+
 				DialogBox dialogBox = new DialogBox(true, false);
 				dialogBox.setText(msg);
 				dialogBox.center();
 			}
+
 		});
+	}
+
+	private String getCorrectMsg() {
+		String msg = RootPanel.get(ID_correctMsg).getElement().getInnerText();
+		return msg;
+	}
+
+	private String getUnfillesMsg(int unfilledCount) {
+		String msg = RootPanel.get(ID_unfilledMsg).getElement().getInnerText();
+		msg = MessageFormat.format(msg, unfilledCount);
+		return msg;
+	}
+	private String getErrorsMsg(int errorCount) {
+		String msg = RootPanel.get(ID_errorsMsg).getElement().getInnerText();
+		msg = MessageFormat.format(msg, errorCount);
+		return msg;
+	}
+	private String getErrorsAndUnfilledMsg(int errorCount, int unfilledCount) {
+		String msg = RootPanel.get(ID_errorsAndUnfilledMsg).getElement().getInnerText();
+		msg = MessageFormat.format(msg, errorCount,unfilledCount);
+		return msg;
 	}
 
 	private SimpleDropController createDropController(final FlowPanel l) {

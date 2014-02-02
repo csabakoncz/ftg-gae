@@ -52,6 +52,12 @@
 			<version>3.1.2</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.google.code.gwtx</groupId>
+			<artifactId>gwtx</artifactId>
+			<version>1.5.3</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
