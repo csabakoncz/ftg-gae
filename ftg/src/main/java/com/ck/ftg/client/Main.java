@@ -3,6 +3,7 @@ package com.ck.ftg.client;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.allen_sauer.gwt.dnd.client.DragContext;
@@ -19,7 +20,6 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Text;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -106,13 +106,18 @@ public class Main implements EntryPoint {
 		}
 
 		{
-			// randomize the choices:
-			List<String> randomEntries = new ArrayList<String>(entries);
-			for (int index = 0; index < (length - 1); index++) {
-				int newIndex = index + Random.nextInt(length - index);
-				Collections.swap(randomEntries, index, newIndex);
-			}
-			for (String string : randomEntries) {
+			//sort the choices alphabetically
+			List<String> displayedEntries = new ArrayList<String>(entries);
+			Comparator<String> comparator=new Comparator<String>() {
+
+				public int compare(String o1, String o2) {
+					return o1.compareToIgnoreCase(o2);
+				}
+			};
+
+			Collections.sort(displayedEntries, comparator);
+			
+			for (String string : displayedEntries) {
 				createChoice(string);
 			}
 		}
