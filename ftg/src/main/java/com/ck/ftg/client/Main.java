@@ -64,6 +64,7 @@ public class Main implements EntryPoint {
 	private static final String STYLE_GUESSED_WORD = "guessedWord";
 	private static final String STYLE_CORRECT_WORD = "correctWord";
 	private static final String STYLE_INCORRECT_WORD = "incorrectWord";
+	private static final String DELIMITER = "#";
 	
 	private FlowPanel choicesPanel;
 	private HTMLPanel puzzleArea;
@@ -83,6 +84,8 @@ public class Main implements EntryPoint {
 
 	private void producePuzzle(Element text) {
 
+		preprocessText(text);
+		
 		NodeList<Element> divs = text.getElementsByTagName(GAP_ELEMENT);
 
 		dragController = new PickupDragController(RootPanel.get(), false);
@@ -170,6 +173,46 @@ public class Main implements EntryPoint {
 
 		configureCheckHandler(entries, gaps);
 
+	}
+
+	private void preprocessText(Element text) {
+		String innerHTML = text.getInnerHTML();
+
+		String[] split = innerHTML.split(DELIMITER);
+		if(split.length<2){
+			return;
+		}
+		
+		StringBuilder sb=new StringBuilder();
+
+		String openGap="<"+GAP_ELEMENT+">";
+		String closeGap="</"+GAP_ELEMENT+">";
+		boolean elementOpen=false;
+		
+		for(int i=0; i<split.length; i++){
+
+			String s=split[i];
+			
+			sb.append(s);
+			
+			if(elementOpen){
+				sb.append(closeGap);
+				elementOpen=false;
+			}
+			else if(i<(split.length-1)){
+				sb.append(openGap);
+				elementOpen=true;
+			}
+			
+			
+		}
+		
+		//if there was an error (i.e. odd number or hashmarks), close the last gap:
+		if(elementOpen){
+			sb.append(closeGap);
+		}
+		
+		text.setInnerHTML(sb.toString());
 	}
 
 	private String createId(int i) {
