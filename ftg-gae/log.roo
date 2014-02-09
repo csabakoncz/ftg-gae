@@ -1,0 +1,39 @@
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2012-11-29 22:27:53
+download status
+download accept terms of use
+help
+hint
+project --topLevelPackage com.ck.rt1
+hint
+jpa setup --provider HIBERNATE --database HYPERSONIC_IN_MEMORY 
+hint
+entity jpa --class com.ck.rt1.model.Exercise
+hint
+field string --fieldName title 
+field string --fieldName content
+hint
+hint web mvc
+web mvc setup
+hint
+hint web mvc
+web mvc scaffold --class ~.model.Exercise
+web mvc scaffold --class ~.web.ExerciseController
+hint
+hint finders
+finder list
+hint finder
+hint
+hint finders
+finder list
+finder add --finderName findExercisesByTitleLike
+hint
+help json
+hint json
+json all
+web mvc json all
+web mvc json all
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2012-11-29 23:29:08
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2012-11-29 23:39:30
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2012-12-09 22:11:27
+security setup 
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2012-12-09 22:55:30
