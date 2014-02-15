@@ -37,3 +37,25 @@ web mvc json all
 // Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2012-12-09 22:11:27
 security setup 
 // Spring Roo 1.2.2.RELEASE [rev 7d75659] log closed at 2012-12-09 22:55:30
+// Spring Roo 1.2.5.RELEASE [rev 8341dc2] log opened at 2014-02-15 22:03:42
+entity jpa --class com.ck.rt1.model.Stylesheet
+field string --fieldName name
+field string --fieldName content --sizeMax 64000
+entity jpa --class com.ck.rt1.model.Template
+field string --fieldName name
+field string --fieldName content --sizeMax 64000
+field reference --fieldName stylesheet --type com.ck.rt1.model.Stylesheet --class com.ck.rt1.model.Exercise
+// [failed] field reference --fieldName stylesheet --type com.ck.rt1.model.Template --class com.ck.rt1.model.Exercise --notNull 
+field reference --fieldName template --type com.ck.rt1.model.Template --class com.ck.rt1.model.Exercise --notNull 
+finder list 
+finder add --finderName findExercisesByContentLike
+finder add --finderName findStylesheetsByNameLike --class ~.rt1.model.Stylesheet
+finder add --finderName findStylesheetsByContentLike --class ~.rt1.model.Stylesheet
+finder add --finderName findTemplatesByContentLike --class ~.rt1.model.Template
+finder add --finderName findTemplatesByNameLike --class ~.rt1.model.Template
+// Spring Roo 1.2.5.RELEASE [rev 8341dc2] log closed at 2014-02-15 22:47:23
+// Spring Roo 1.2.5.RELEASE [rev 8341dc2] log opened at 2014-02-15 22:53:59
+web mvc all --package com.ck.rt1.web
+// Spring Roo 1.2.5.RELEASE [rev 8341dc2] log closed at 2014-02-15 23:10:58
+// Spring Roo 1.2.5.RELEASE [rev 8341dc2] log opened at 2014-02-15 23:17:40
+// Spring Roo 1.2.5.RELEASE [rev 8341dc2] log closed at 2014-02-16 00:44:11

@@ -6,8 +6,13 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.ck.rt1.model.Exercise;
 
+import freemarker.cache.StringTemplateLoader;
+import freemarker.cache.TemplateLoader;
+import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
@@ -32,27 +37,88 @@ public class ExerciseController {
 
 	@Autowired
 	FreeMarkerConfig freeMarkerConfig;
-	
-    @RequestMapping(value = "/plain/{id}", produces = "text/html")
-    @ResponseBody
-    public ResponseEntity<String> showPlain(@PathVariable("id") Long id, Model uiModel) throws IOException, Exception {
-        Exercise exercise = Exercise.findExercise(id);
-        Template template = freeMarkerConfig.getConfiguration().getTemplate("exercises/show.ftl");
-        /* Create a data-model */
-        Map root = new HashMap();
-        root.put("exercise", exercise);
 
-        /* Merge data-model with template */
-        StringWriter out = new StringWriter();
-        template.process(root, out);
-        out.flush();
-        
+	@RequestMapping(value = "/plain/{id}", produces = "text/html")
+	@ResponseBody
+	public ResponseEntity<String> showPlain(@PathVariable("id") Long id,
+			Model uiModel) throws IOException, Exception {
+		Exercise exercise = Exercise.findExercise(id);
+		Template template = freeMarkerConfig.getConfiguration().getTemplate(
+				"exercises/show.ftl");
+		// Template template =
+		// freeMarkerConfig.getConfiguration().getTemplate("Puzzle.html");
+		/* Create a data-model */
+		Map root = new HashMap();
+		root.put("exercise", exercise);
+		/* Merge data-model with template */
+		StringWriter out = new StringWriter();
+		template.process(root, out);
+		out.flush();
 		uiModel.addAttribute("exercise", exercise);
-        uiModel.addAttribute("itemId", id);
-        HttpHeaders headers = new HttpHeaders();
-        
-        String  body= out.toString();
-        return new ResponseEntity<String>(body, headers, HttpStatus.OK);
-    }
+		uiModel.addAttribute("itemId", id);
+		HttpHeaders headers = new HttpHeaders();
+		String body = out.toString();
+		return new ResponseEntity<String>(body, headers, HttpStatus.OK);
+	}
 
+	@RequestMapping(value = "/plain1/{id}", produces = "text/html")
+	@ResponseBody
+	public ResponseEntity<String> showPlain1(@PathVariable("id") Long id,
+			Model uiModel, HttpServletRequest request) throws IOException, Exception {
+		
+		String url=request.getRequestURL().toString();
+		String baseUrl=url.substring(0,url.indexOf("/exercises/"))+"/resources/gwt";
+		
+		Exercise exercise = Exercise.findExercise(id);
+		
+		Template template = freeMarkerConfig.getConfiguration().getTemplate(
+				"Puzzle.html");
+		
+		/* Create a data-model */
+		Map root = new HashMap();
+		root.put("exercise", exercise);
+		root.put("baseUrl", baseUrl);
+		/* Merge data-model with template */
+		StringWriter out = new StringWriter();
+		template.process(root, out);
+		out.flush();
+		uiModel.addAttribute("exercise", exercise);
+		uiModel.addAttribute("itemId", id);
+		HttpHeaders headers = new HttpHeaders();
+		String body = out.toString();
+		return new ResponseEntity<String>(body, headers, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/plain2/{id}", produces = "text/html")
+	@ResponseBody
+	public ResponseEntity<String> showPlain2(@PathVariable("id") Long id,
+			Model uiModel) throws IOException, Exception {
+		Exercise exercise = Exercise.findExercise(id);
+
+		StringWriter out = new StringWriter();
+
+		Configuration configuration = freeMarkerConfig.getConfiguration();
+		TemplateLoader templateLoader = configuration.getTemplateLoader();
+
+		StringTemplateLoader stl = new StringTemplateLoader();
+		stl.putTemplate("t", exercise.getTemplate().getContent());
+		try {
+			configuration.setTemplateLoader(stl);
+			Template template = configuration.getTemplate("t");
+
+			/* Create a data-model */
+			Map<String, Object> root = new HashMap();
+			root.put("exercise", exercise);
+
+			/* Merge data-model with template */
+			template.process(root, out);
+			out.flush();
+		} finally {
+			configuration.setTemplateLoader(templateLoader);
+		}
+
+		HttpHeaders headers = new HttpHeaders();
+		String body = out.toString();
+		return new ResponseEntity<String>(body, headers, HttpStatus.OK);
+	}
 }

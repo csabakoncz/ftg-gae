@@ -4,6 +4,8 @@
 package com.ck.rt1.web;
 
 import com.ck.rt1.model.Exercise;
+import com.ck.rt1.model.Stylesheet;
+import com.ck.rt1.model.Template;
 import com.ck.rt1.web.ApplicationConversionServiceFactoryBean;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.core.convert.converter.Converter;
@@ -37,10 +39,64 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
         };
     }
     
+    public Converter<Stylesheet, String> ApplicationConversionServiceFactoryBean.getStylesheetToStringConverter() {
+        return new org.springframework.core.convert.converter.Converter<com.ck.rt1.model.Stylesheet, java.lang.String>() {
+            public String convert(Stylesheet stylesheet) {
+                return new StringBuilder().append(stylesheet.getName()).append(' ').append(stylesheet.getContent()).toString();
+            }
+        };
+    }
+    
+    public Converter<Long, Stylesheet> ApplicationConversionServiceFactoryBean.getIdToStylesheetConverter() {
+        return new org.springframework.core.convert.converter.Converter<java.lang.Long, com.ck.rt1.model.Stylesheet>() {
+            public com.ck.rt1.model.Stylesheet convert(java.lang.Long id) {
+                return Stylesheet.findStylesheet(id);
+            }
+        };
+    }
+    
+    public Converter<String, Stylesheet> ApplicationConversionServiceFactoryBean.getStringToStylesheetConverter() {
+        return new org.springframework.core.convert.converter.Converter<java.lang.String, com.ck.rt1.model.Stylesheet>() {
+            public com.ck.rt1.model.Stylesheet convert(String id) {
+                return getObject().convert(getObject().convert(id, Long.class), Stylesheet.class);
+            }
+        };
+    }
+    
+    public Converter<Template, String> ApplicationConversionServiceFactoryBean.getTemplateToStringConverter() {
+        return new org.springframework.core.convert.converter.Converter<com.ck.rt1.model.Template, java.lang.String>() {
+            public String convert(Template template) {
+                return new StringBuilder().append(template.getName()).append(' ').append(template.getContent()).toString();
+            }
+        };
+    }
+    
+    public Converter<Long, Template> ApplicationConversionServiceFactoryBean.getIdToTemplateConverter() {
+        return new org.springframework.core.convert.converter.Converter<java.lang.Long, com.ck.rt1.model.Template>() {
+            public com.ck.rt1.model.Template convert(java.lang.Long id) {
+                return Template.findTemplate(id);
+            }
+        };
+    }
+    
+    public Converter<String, Template> ApplicationConversionServiceFactoryBean.getStringToTemplateConverter() {
+        return new org.springframework.core.convert.converter.Converter<java.lang.String, com.ck.rt1.model.Template>() {
+            public com.ck.rt1.model.Template convert(String id) {
+                return getObject().convert(getObject().convert(id, Long.class), Template.class);
+            }
+        };
+    }
+    
     public void ApplicationConversionServiceFactoryBean.installLabelConverters(FormatterRegistry registry) {
         registry.addConverter(getExerciseToStringConverter());
         registry.addConverter(getIdToExerciseConverter());
         registry.addConverter(getStringToExerciseConverter());
+        registry.addConverter(getStylesheetToStringConverter());
+        registry.addConverter(getIdToStylesheetConverter());
+        registry.addConverter(getStringToStylesheetConverter());
+        registry.addConverter(getTemplateToStringConverter());
+        registry.addConverter(getIdToTemplateConverter());
+        registry.addConverter(getStringToTemplateConverter());
     }
     
     public void ApplicationConversionServiceFactoryBean.afterPropertiesSet() {

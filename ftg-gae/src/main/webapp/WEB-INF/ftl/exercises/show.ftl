@@ -1,5 +1,5 @@
 <html>
-<head><title>ViralPatel.net - FreeMarker Spring MVC Hello World</title>
+<head><title>${exercise.title}</title>
 <body>
  
 What do we have here?

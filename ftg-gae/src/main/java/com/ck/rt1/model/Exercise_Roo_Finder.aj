@@ -9,6 +9,73 @@ import javax.persistence.TypedQuery;
 
 privileged aspect Exercise_Roo_Finder {
     
+    public static Long Exercise.countFindExercisesByContentLike(String content) {
+        if (content == null || content.length() == 0) throw new IllegalArgumentException("The content argument is required");
+        content = content.replace('*', '%');
+        if (content.charAt(0) != '%') {
+            content = "%" + content;
+        }
+        if (content.charAt(content.length() - 1) != '%') {
+            content = content + "%";
+        }
+        EntityManager em = Exercise.entityManager();
+        TypedQuery q = em.createQuery("SELECT COUNT(o) FROM Exercise AS o WHERE LOWER(o.content) LIKE LOWER(:content)", Long.class);
+        q.setParameter("content", content);
+        return ((Long) q.getSingleResult());
+    }
+    
+    public static Long Exercise.countFindExercisesByTitleLike(String title) {
+        if (title == null || title.length() == 0) throw new IllegalArgumentException("The title argument is required");
+        title = title.replace('*', '%');
+        if (title.charAt(0) != '%') {
+            title = "%" + title;
+        }
+        if (title.charAt(title.length() - 1) != '%') {
+            title = title + "%";
+        }
+        EntityManager em = Exercise.entityManager();
+        TypedQuery q = em.createQuery("SELECT COUNT(o) FROM Exercise AS o WHERE LOWER(o.title) LIKE LOWER(:title)", Long.class);
+        q.setParameter("title", title);
+        return ((Long) q.getSingleResult());
+    }
+    
+    public static TypedQuery<Exercise> Exercise.findExercisesByContentLike(String content) {
+        if (content == null || content.length() == 0) throw new IllegalArgumentException("The content argument is required");
+        content = content.replace('*', '%');
+        if (content.charAt(0) != '%') {
+            content = "%" + content;
+        }
+        if (content.charAt(content.length() - 1) != '%') {
+            content = content + "%";
+        }
+        EntityManager em = Exercise.entityManager();
+        TypedQuery<Exercise> q = em.createQuery("SELECT o FROM Exercise AS o WHERE LOWER(o.content) LIKE LOWER(:content)", Exercise.class);
+        q.setParameter("content", content);
+        return q;
+    }
+    
+    public static TypedQuery<Exercise> Exercise.findExercisesByContentLike(String content, String sortFieldName, String sortOrder) {
+        if (content == null || content.length() == 0) throw new IllegalArgumentException("The content argument is required");
+        content = content.replace('*', '%');
+        if (content.charAt(0) != '%') {
+            content = "%" + content;
+        }
+        if (content.charAt(content.length() - 1) != '%') {
+            content = content + "%";
+        }
+        EntityManager em = Exercise.entityManager();
+        String jpaQuery = "SELECT o FROM Exercise AS o WHERE LOWER(o.content) LIKE LOWER(:content)";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        TypedQuery<Exercise> q = em.createQuery(jpaQuery, Exercise.class);
+        q.setParameter("content", content);
+        return q;
+    }
+    
     public static TypedQuery<Exercise> Exercise.findExercisesByTitleLike(String title) {
         if (title == null || title.length() == 0) throw new IllegalArgumentException("The title argument is required");
         title = title.replace('*', '%');
@@ -20,6 +87,28 @@ privileged aspect Exercise_Roo_Finder {
         }
         EntityManager em = Exercise.entityManager();
         TypedQuery<Exercise> q = em.createQuery("SELECT o FROM Exercise AS o WHERE LOWER(o.title) LIKE LOWER(:title)", Exercise.class);
+        q.setParameter("title", title);
+        return q;
+    }
+    
+    public static TypedQuery<Exercise> Exercise.findExercisesByTitleLike(String title, String sortFieldName, String sortOrder) {
+        if (title == null || title.length() == 0) throw new IllegalArgumentException("The title argument is required");
+        title = title.replace('*', '%');
+        if (title.charAt(0) != '%') {
+            title = "%" + title;
+        }
+        if (title.charAt(title.length() - 1) != '%') {
+            title = title + "%";
+        }
+        EntityManager em = Exercise.entityManager();
+        String jpaQuery = "SELECT o FROM Exercise AS o WHERE LOWER(o.title) LIKE LOWER(:title)";
+        if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
+            jpaQuery = jpaQuery + " ORDER BY " + sortFieldName;
+            if ("ASC".equalsIgnoreCase(sortOrder) || "DESC".equalsIgnoreCase(sortOrder)) {
+                jpaQuery = jpaQuery + " " + sortOrder;
+            }
+        }
+        TypedQuery<Exercise> q = em.createQuery(jpaQuery, Exercise.class);
         q.setParameter("title", title);
         return q;
     }

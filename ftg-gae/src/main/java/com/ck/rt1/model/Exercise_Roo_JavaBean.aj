@@ -4,6 +4,8 @@
 package com.ck.rt1.model;
 
 import com.ck.rt1.model.Exercise;
+import com.ck.rt1.model.Stylesheet;
+import com.ck.rt1.model.Template;
 
 privileged aspect Exercise_Roo_JavaBean {
     
@@ -21,6 +23,22 @@ privileged aspect Exercise_Roo_JavaBean {
     
     public void Exercise.setContent(String content) {
         this.content = content;
+    }
+    
+    public Stylesheet Exercise.getStylesheet() {
+        return this.stylesheet;
+    }
+    
+    public void Exercise.setStylesheet(Stylesheet stylesheet) {
+        this.stylesheet = stylesheet;
+    }
+    
+    public Template Exercise.getTemplate() {
+        return this.template;
+    }
+    
+    public void Exercise.setTemplate(Template template) {
+        this.template = template;
     }
     
 }

@@ -6,6 +6,8 @@
         <table:table data="${exercises}" id="l_com_ck_rt1_model_Exercise" path="/exercises" z="twABPlkYmDb6Hv0YzxLwu8EgQuw=">
             <table:column id="c_com_ck_rt1_model_Exercise_title" property="title" z="cXgP9XMuQq4dK0uT6Rfe/wZAkqA="/>
             <table:column id="c_com_ck_rt1_model_Exercise_content" property="content" z="3ltOGs5icJOq44zqp5x/1/XYgdU="/>
+            <table:column id="c_com_ck_rt1_model_Exercise_stylesheet" property="stylesheet" z="MCVuJ7elbp6akEf7/lRZXeNENYs="/>
+            <table:column id="c_com_ck_rt1_model_Exercise_template" property="template" z="khjgME576HAButclWpzCy9BVBP4="/>
         </table:table>
     </page:list>
 </div>

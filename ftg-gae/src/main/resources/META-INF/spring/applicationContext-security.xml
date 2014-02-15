@@ -26,8 +26,8 @@
                 <user name="admin" password="8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918" authorities="ROLE_ADMIN" />
                 <user name="user" password="04f8996da763b7a969b1028ee3007569eaf3a635486ddab211d512c85b9df8fb" authorities="ROLE_USER" />
         -->
-                <user name="alma" password="1630a311f58d5561977c0e680964e3aa16f68dbc9056f0e4b16131868cab2656" authorities="ROLE_ADMIN" />
-                <user name="korte" password="f71575fb0fc507afa17494f85f55f5339d8d695b3f6b3875a114631b975230c7" authorities="ROLE_USER" />
+                <user name="alma" password="efe9789c5a74e7c97ce9f52cbfbcbf48fc30c45692f375adc7ad4e296ab2467e" authorities="ROLE_ADMIN" />
+                <user name="korte" password="efe9789c5a74e7c97ce9f52cbfbcbf48fc30c45692f375adc7ad4e296ab2467e" authorities="ROLE_USER" />
             </user-service>
         </authentication-provider>
     </authentication-manager>
