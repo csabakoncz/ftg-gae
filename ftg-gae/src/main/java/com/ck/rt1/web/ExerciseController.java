@@ -3,6 +3,7 @@ package com.ck.rt1.web;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import freemarker.template.TemplateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.roo.addon.web.mvc.controller.json.RooWebJson;
 import org.springframework.roo.addon.web.mvc.controller.scaffold.RooWebScaffold;
@@ -38,7 +40,7 @@ public class ExerciseController {
 	@Autowired
 	FreeMarkerConfig freeMarkerConfig;
 
-	@RequestMapping(value = "/plain/{id}", produces = "text/html")
+	@RequestMapping(value = "/plain0/{id}", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public ResponseEntity<String> showPlain(@PathVariable("id") Long id,
 			Model uiModel) throws IOException, Exception {
@@ -61,13 +63,12 @@ public class ExerciseController {
 		return new ResponseEntity<String>(body, headers, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/plain1/{id}", produces = "text/html")
+	@RequestMapping(value = "/plain1/{id}", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public ResponseEntity<String> showPlain1(@PathVariable("id") Long id,
 			Model uiModel, HttpServletRequest request) throws IOException, Exception {
 		
-		String url=request.getRequestURL().toString();
-		String baseUrl=url.substring(0,url.indexOf("/exercises/"))+"/resources/gwt";
+		String baseUrl = getBaseUrl(request);
 		
 		Exercise exercise = Exercise.findExercise(id);
 		
@@ -89,10 +90,16 @@ public class ExerciseController {
 		return new ResponseEntity<String>(body, headers, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/plain2/{id}", produces = "text/html")
+	private String getBaseUrl(HttpServletRequest request) {
+		String url=request.getRequestURL().toString();
+		String baseUrl=url.substring(0,url.indexOf("/exercises/"))+"/resources/gwt";
+		return baseUrl;
+	}
+
+	@RequestMapping(value = "/plain/{id}", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public ResponseEntity<String> showPlain2(@PathVariable("id") Long id,
-			Model uiModel) throws IOException, Exception {
+			Model uiModel, HttpServletRequest request) throws IOException, Exception {
 		Exercise exercise = Exercise.findExercise(id);
 
 		StringWriter out = new StringWriter();
@@ -108,6 +115,7 @@ public class ExerciseController {
 
 			/* Create a data-model */
 			Map<String, Object> root = new HashMap();
+			root.put("baseUrl", getBaseUrl(request));
 			root.put("exercise", exercise);
 
 			/* Merge data-model with template */
