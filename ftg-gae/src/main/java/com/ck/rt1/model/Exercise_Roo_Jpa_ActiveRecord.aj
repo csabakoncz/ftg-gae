@@ -7,6 +7,7 @@ import com.ck.rt1.model.Exercise;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect Exercise_Roo_Jpa_ActiveRecord {
@@ -22,14 +23,17 @@ privileged aspect Exercise_Roo_Jpa_ActiveRecord {
         return em;
     }
     
+    @Transactional
     public static long Exercise.countExercises() {
-        return entityManager().createQuery("SELECT COUNT(o) FROM Exercise o", Long.class).getSingleResult();
+        return findAllExercises().size();
     }
     
+    @Transactional
     public static List<Exercise> Exercise.findAllExercises() {
         return entityManager().createQuery("SELECT o FROM Exercise o", Exercise.class).getResultList();
     }
     
+    @Transactional
     public static List<Exercise> Exercise.findAllExercises(String sortFieldName, String sortOrder) {
         String jpaQuery = "SELECT o FROM Exercise o";
         if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
@@ -41,15 +45,18 @@ privileged aspect Exercise_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery(jpaQuery, Exercise.class).getResultList();
     }
     
+    @Transactional
     public static Exercise Exercise.findExercise(Long id) {
         if (id == null) return null;
         return entityManager().find(Exercise.class, id);
     }
     
+    @Transactional
     public static List<Exercise> Exercise.findExerciseEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM Exercise o", Exercise.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
+    @Transactional
     public static List<Exercise> Exercise.findExerciseEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
         String jpaQuery = "SELECT o FROM Exercise o";
         if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
@@ -61,7 +68,7 @@ privileged aspect Exercise_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery(jpaQuery, Exercise.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void Exercise.persist() {
         if (this.entityManager == null) this.entityManager = entityManager();
         this.entityManager.persist(this);

@@ -7,6 +7,7 @@ import com.ck.rt1.model.Stylesheet;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 privileged aspect Stylesheet_Roo_Jpa_ActiveRecord {
@@ -22,14 +23,17 @@ privileged aspect Stylesheet_Roo_Jpa_ActiveRecord {
         return em;
     }
     
+    @Transactional
     public static long Stylesheet.countStylesheets() {
-        return entityManager().createQuery("SELECT COUNT(o) FROM Stylesheet o", Long.class).getSingleResult();
+        return findAllStylesheets().size();
     }
     
+    @Transactional
     public static List<Stylesheet> Stylesheet.findAllStylesheets() {
         return entityManager().createQuery("SELECT o FROM Stylesheet o", Stylesheet.class).getResultList();
     }
     
+    @Transactional
     public static List<Stylesheet> Stylesheet.findAllStylesheets(String sortFieldName, String sortOrder) {
         String jpaQuery = "SELECT o FROM Stylesheet o";
         if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
@@ -41,15 +45,18 @@ privileged aspect Stylesheet_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery(jpaQuery, Stylesheet.class).getResultList();
     }
     
+    @Transactional
     public static Stylesheet Stylesheet.findStylesheet(Long id) {
         if (id == null) return null;
         return entityManager().find(Stylesheet.class, id);
     }
     
+    @Transactional
     public static List<Stylesheet> Stylesheet.findStylesheetEntries(int firstResult, int maxResults) {
         return entityManager().createQuery("SELECT o FROM Stylesheet o", Stylesheet.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
+    @Transactional
     public static List<Stylesheet> Stylesheet.findStylesheetEntries(int firstResult, int maxResults, String sortFieldName, String sortOrder) {
         String jpaQuery = "SELECT o FROM Stylesheet o";
         if (fieldNames4OrderClauseFilter.contains(sortFieldName)) {
@@ -61,7 +68,7 @@ privileged aspect Stylesheet_Roo_Jpa_ActiveRecord {
         return entityManager().createQuery(jpaQuery, Stylesheet.class).setFirstResult(firstResult).setMaxResults(maxResults).getResultList();
     }
     
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void Stylesheet.persist() {
         if (this.entityManager == null) this.entityManager = entityManager();
         this.entityManager.persist(this);

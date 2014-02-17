@@ -16,7 +16,7 @@ privileged aspect Exercise_Roo_Jpa_Entity {
     declare @type: Exercise: @Entity;
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long Exercise.id;
     

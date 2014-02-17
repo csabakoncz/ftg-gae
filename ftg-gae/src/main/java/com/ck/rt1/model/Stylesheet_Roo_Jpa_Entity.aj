@@ -16,7 +16,7 @@ privileged aspect Stylesheet_Roo_Jpa_Entity {
     declare @type: Stylesheet: @Entity;
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long Stylesheet.id;
     
