@@ -1,0 +1,18 @@
+// Spring Roo 1.2.2.RELEASE [rev 7d75659] log opened at 2012-11-29 22:27:53
+project --topLevelPackage com.ck.rt1
+jpa setup --provider DATANUCLEUS --database GOOGLE_APP_ENGINE
+entity jpa --class com.ck.rt1.model.Exercise --identifierType java.lang.String --versionType java.lang.Long
+field string --fieldName title 
+field string --fieldName content --sizeMax 64000
+entity jpa --class com.ck.rt1.model.Stylesheet --identifierType java.lang.String --versionType java.lang.Long
+field string --fieldName name
+field string --fieldName content --sizeMax 64000
+entity jpa --class com.ck.rt1.model.Template --identifierType java.lang.String --versionType java.lang.Long
+field string --fieldName name
+field string --fieldName content --sizeMax 64000
+field reference --fieldName stylesheet --type com.ck.rt1.model.Stylesheet --class com.ck.rt1.model.Exercise --notNull
+field reference --fieldName template --type com.ck.rt1.model.Template --class com.ck.rt1.model.Exercise --notNull 
+web mvc setup
+web mvc all --package com.ck.rt1.web
+security setup 
+ 
