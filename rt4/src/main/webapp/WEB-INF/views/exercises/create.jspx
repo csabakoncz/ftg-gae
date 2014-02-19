@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create id="fc_com_ck_rt1_model_Exercise" modelAttribute="exercise" path="/exercises" render="${empty dependencies}" z="fiMW4KyLtr3p9bAsuFEGsvyrSwM=">
+        <field:input field="title" id="c_com_ck_rt1_model_Exercise_title" z="LO0dr7duMwSK8E1QwIHpYUL+0U8="/>
+        <field:textarea field="content" id="c_com_ck_rt1_model_Exercise_content" z="tsbqP7Yk8aDd9SWQ54RKoEkcyiw="/>
+        <field:select field="stylesheet" id="c_com_ck_rt1_model_Exercise_stylesheet" itemValue="id" items="${stylesheets}" path="/stylesheets" required="true" z="7X4BaVJEBpTIPLOvgBNZJxOolyo="/>
+        <field:select field="template" id="c_com_ck_rt1_model_Exercise_template" itemValue="id" items="${templates}" path="/templates" required="true" z="t4seSv5gKBC6fHut538z79a8pjQ="/>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_com_ck_rt1_model_Exercise" render="${not empty dependencies}" z="ckvs1b908usWXVMH3EalZt2BQ50="/>
+</div>

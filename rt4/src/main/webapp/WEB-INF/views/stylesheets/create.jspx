@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create id="fc_com_ck_rt1_model_Stylesheet" modelAttribute="stylesheet" path="/stylesheets" render="${empty dependencies}" z="EuUC/FLIokt6cJTh5wQcVjtbJWM=">
+        <field:input field="name" id="c_com_ck_rt1_model_Stylesheet_name" z="gHJcdRCcjldC8LwuQDm63Ol7J1o="/>
+        <field:textarea field="content" id="c_com_ck_rt1_model_Stylesheet_content" z="vmgZT1OzmuHFAZBZYVIyjSg86Ug="/>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_com_ck_rt1_model_Stylesheet" render="${not empty dependencies}" z="myXZvmPCpPGqfGdS+QvCWARxPb4="/>
+</div>

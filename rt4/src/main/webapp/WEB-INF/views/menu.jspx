@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:menu="urn:jsptagdir:/WEB-INF/tags/menu" id="menu" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <menu:menu id="_menu" z="nZaf43BjUg1iM0v70HJVEsXDopc=">
+        <menu:category id="c_stylesheet" z="K5ck96sgDtcPbcO/Lo9XOg4LoBI=">
+            <menu:item id="i_stylesheet_new" messageCode="global_menu_new" url="/stylesheets?form" z="DkWnimE7leDBRhzaxrPHGRfSdgA="/>
+            <menu:item id="i_stylesheet_list" messageCode="global_menu_list" url="/stylesheets?page=1&amp;size=${empty param.size ? 10 : param.size}" z="vaS4vHX5gTNe7BIuJP7txNh23eA="/>
+        </menu:category>
+        <menu:category id="c_template" z="u52ST2Lv3VBnmXejWK0ng8Wk0iA=">
+            <menu:item id="i_template_new" messageCode="global_menu_new" url="/templates?form" z="B1j6uV5puYklY6nMYwIfkjxs1QM="/>
+            <menu:item id="i_template_list" messageCode="global_menu_list" url="/templates?page=1&amp;size=${empty param.size ? 10 : param.size}" z="thVp2LICK9SnorHpGmPedQOLjYo="/>
+        </menu:category>
+        <menu:category id="c_exercise" z="jmRqJenbh5VLkH+bwtkuITAti7w=">
+            <menu:item id="i_exercise_new" messageCode="global_menu_new" url="/exercises?form" z="EQjQ7NFz2FdX+yL922dJHnOE/H8="/>
+            <menu:item id="i_exercise_list" messageCode="global_menu_list" url="/exercises?page=1&amp;size=${empty param.size ? 10 : param.size}" z="l8wukOw8zZy9tbU//J/+LkjSS9A="/>
+        </menu:category>
+    </menu:menu>
+</div>
