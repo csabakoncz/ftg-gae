@@ -74,4 +74,10 @@
     </property>
   </bean>
 <bean class="com.ck.rt1.web.ApplicationConversionServiceFactoryBean" id="applicationConversionService"/>
+
+	<!-- freemarker config -->
+	<bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer" id="freemarkerConfig">
+		<property name="templateLoaderPath" value="/WEB-INF/ftl/"/>
+	</bean>
+	
 </beans>
