@@ -16,14 +16,17 @@ body {
 }
 
 #wrapper {
-	width:800px;
+	/* width:800px; */
+	width:100%;
 	min-width: 800px;
-	max-width: 800px;
+	/* max-width: 800px; */
 	margin-right: auto;
 	margin-left: auto;
 
 	/* fix max-width incompatibility in IE6 */
+	/*
 	width:expression(document.body.clientWidth > 800? "800px": "auto" );
+	*/
 	
 	overflow:hidden;
 	display:block;
@@ -357,9 +360,12 @@ fieldset th {
 
 .dijitTextArea{
 	min-height:5.5em !important;
-	max-height:22em !important;
+	/* max-height:22em !important; */
 	overflow-y: auto !important;
-	max-width: 175px;
+	overflow-x: scroll !important;
+	white-space: nowrap;
+	
+	/* max-width: 175px; */
 }
 
 .RichTextEditable{
