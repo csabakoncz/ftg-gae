@@ -1,5 +1,6 @@
 package com.ck.rt1.model;
 
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -18,6 +19,7 @@ public class Exercise {
     private String title;
 
     @Size(max = 64000)
+    @Lob
     private String content;
 
     @Unowned
