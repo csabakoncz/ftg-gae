@@ -13,4 +13,10 @@
 <definition extends="default" name="exercises/update">
         <put-attribute name="body" value="/WEB-INF/views/exercises/update.jspx"/>
     </definition>
+<definition extends="default" name="exercises/findExercisesByContentLike">
+        <put-attribute name="body" value="/WEB-INF/views/exercises/findExercisesByContentLike.jspx"/>
+    </definition>
+<definition extends="default" name="exercises/findExercisesByTitleLike">
+        <put-attribute name="body" value="/WEB-INF/views/exercises/findExercisesByTitleLike.jspx"/>
+    </definition>
 </tiles-definitions>

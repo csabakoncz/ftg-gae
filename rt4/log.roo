@@ -18,3 +18,15 @@ security setup
 // script --file C:\su\git\fill-the-gap\ftg-gae\ftg-gae.roo
 quit
 // Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log closed at 2014-02-19 22:30:09
+// Spring Roo 1.2.3.RELEASE [rev 7fd62b6] log opened at 2014-02-24 22:18:26
+finder list --class ~.model.Exercise
+finder add --finderName findExercisesByTitleLike
+finder add --class ~.model.Exercise --finderName findExercisesByContentLike
+finder list 
+finder list --class ~.model.Stylesheet
+finder add --finderName findStylesheetsByNameLike
+finder add --finderName findStylesheetsByContentLike
+finder list --class ~.model.Template
+finder add --finderName findTemplatesByNameLike
+finder add --finderName findTemplatesByContentLike
+web mvc finder all

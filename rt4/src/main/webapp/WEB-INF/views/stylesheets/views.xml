@@ -13,4 +13,10 @@
 <definition extends="default" name="stylesheets/update">
         <put-attribute name="body" value="/WEB-INF/views/stylesheets/update.jspx"/>
     </definition>
+<definition extends="default" name="stylesheets/findStylesheetsByContentLike">
+        <put-attribute name="body" value="/WEB-INF/views/stylesheets/findStylesheetsByContentLike.jspx"/>
+    </definition>
+<definition extends="default" name="stylesheets/findStylesheetsByNameLike">
+        <put-attribute name="body" value="/WEB-INF/views/stylesheets/findStylesheetsByNameLike.jspx"/>
+    </definition>
 </tiles-definitions>

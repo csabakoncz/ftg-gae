@@ -13,4 +13,10 @@
 <definition extends="default" name="templates/update">
         <put-attribute name="body" value="/WEB-INF/views/templates/update.jspx"/>
     </definition>
+<definition extends="default" name="templates/findTemplatesByContentLike">
+        <put-attribute name="body" value="/WEB-INF/views/templates/findTemplatesByContentLike.jspx"/>
+    </definition>
+<definition extends="default" name="templates/findTemplatesByNameLike">
+        <put-attribute name="body" value="/WEB-INF/views/templates/findTemplatesByNameLike.jspx"/>
+    </definition>
 </tiles-definitions>
