@@ -31,26 +31,10 @@ privileged aspect ApplicationConversionServiceFactoryBean_Roo_ConversionService 
         };
     }
     
-    public Converter<Stylesheet, String> ApplicationConversionServiceFactoryBean.getStylesheetToStringConverter() {
-        return new org.springframework.core.convert.converter.Converter<com.ck.rt1.model.Stylesheet, java.lang.String>() {
-            public String convert(Stylesheet stylesheet) {
-                return new StringBuilder().append(stylesheet.getName()).append(' ').append(stylesheet.getContent()).toString();
-            }
-        };
-    }
-    
     public Converter<String, Stylesheet> ApplicationConversionServiceFactoryBean.getIdToStylesheetConverter() {
         return new org.springframework.core.convert.converter.Converter<java.lang.String, com.ck.rt1.model.Stylesheet>() {
             public com.ck.rt1.model.Stylesheet convert(java.lang.String id) {
                 return Stylesheet.findStylesheet(id);
-            }
-        };
-    }
-    
-    public Converter<Template, String> ApplicationConversionServiceFactoryBean.getTemplateToStringConverter() {
-        return new org.springframework.core.convert.converter.Converter<com.ck.rt1.model.Template, java.lang.String>() {
-            public String convert(Template template) {
-                return new StringBuilder().append(template.getName()).append(' ').append(template.getContent()).toString();
             }
         };
     }
