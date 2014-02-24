@@ -30,7 +30,12 @@
       <spring:escapeBody javaScriptEscape="true" >${field}</spring:escapeBody>
     </c:set>
 
-    <script type="text/javascript">dojo.require("dijit.Editor");</script>
+    <script type="text/javascript">
+	dojo.require("dojo.parser");
+	dojo.require("dijit.Editor");
+	dojo.require("dijit._editor.plugins.ViewSource");
+    </script>
+    
     <div id="_${fn:escapeXml(id)}_id">
       <label for="_${sec_field}_id">
         <c:out value="${fn:escapeXml(label)}" />
@@ -40,7 +45,7 @@
       <div>
         <div id="_${sec_field}_id_"></div>
         <script type="text/javascript">
-           Spring.addDecoration(new Spring.ElementDecoration({elementId : '_${sec_field}_id_', widgetType : 'dijit.Editor', widgetAttrs : {disabled: ${disabled}}}));
+           Spring.addDecoration(new Spring.ElementDecoration({elementId : '_${sec_field}_id_', widgetType : 'dijit.Editor', widgetAttrs : {disabled: ${disabled},extraPlugins:['viewsource']}}));
            dojo.addOnLoad(function () {
               var src = dojo.byId('_${sec_field}_id');
               var rte = dijit.byId('_${sec_field}_id_');

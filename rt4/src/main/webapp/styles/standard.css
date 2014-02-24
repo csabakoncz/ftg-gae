@@ -370,7 +370,7 @@ fieldset th {
 
 .RichTextEditable{
 	min-height:18em !important;
-	max-height:18em !important;
+	/* max-height:18em !important; */
 }
 
 .flag {

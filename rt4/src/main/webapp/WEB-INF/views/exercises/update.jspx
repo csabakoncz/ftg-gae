@@ -4,7 +4,7 @@
     <jsp:output omit-xml-declaration="yes"/>
     <form:update id="fu_com_ck_rt1_model_Exercise" modelAttribute="exercise" path="/exercises" versionField="Version" z="PCuVgwRq9GlUC6ImvtHB44KkVxo=">
         <field:input field="title" id="c_com_ck_rt1_model_Exercise_title" z="LO0dr7duMwSK8E1QwIHpYUL+0U8="/>
-        <field:textarea field="content" id="c_com_ck_rt1_model_Exercise_content" z="tsbqP7Yk8aDd9SWQ54RKoEkcyiw="/>
+        <field:editor field="content" id="c_com_ck_rt1_model_Exercise_content" z="tsbqP7Yk8aDd9SWQ54RKoEkcyiw="/>
         <field:select field="stylesheet" id="c_com_ck_rt1_model_Exercise_stylesheet" itemValue="id" items="${stylesheets}" path="/stylesheets" required="true" z="7X4BaVJEBpTIPLOvgBNZJxOolyo="/>
         <field:select field="template" id="c_com_ck_rt1_model_Exercise_template" itemValue="id" items="${templates}" path="/templates" required="true" z="t4seSv5gKBC6fHut538z79a8pjQ="/>
     </form:update>
