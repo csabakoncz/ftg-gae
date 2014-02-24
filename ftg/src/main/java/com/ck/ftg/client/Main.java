@@ -42,16 +42,16 @@ public class Main implements EntryPoint {
 	private static final String ID_puzzleArea = "puzzleArea";
 	private static final String ID_checkButton = "checkButton";
 	private static final String ID_loadingIndicator = "loadingIndicator";
-	
+
 	private static final String ID_dialogTitle = "dialogTitle";
 	private static final String ID_dialogOK = "dialogOK";
 	private static final String ID_correctMsg = "correctMsg";
 	private static final String ID_errorsMsg = "errorsMsg";
 	private static final String ID_errorsAndUnfilledMsg = "errorsAndUnfilledMsg";
 	private static final String ID_unfilledMsg = "unfilledMsg";
-	
-	
+
 	private static final String GAP_ELEMENT = "em";
+	private static final String GAP_ELEMENT_2 = "i";
 
 	private static final String ID = "id";
 
@@ -65,7 +65,7 @@ public class Main implements EntryPoint {
 	private static final String STYLE_CORRECT_WORD = "correctWord";
 	private static final String STYLE_INCORRECT_WORD = "incorrectWord";
 	private static final String DELIMITER = "#";
-	
+
 	private FlowPanel choicesPanel;
 	private HTMLPanel puzzleArea;
 	PickupDragController dragController;
@@ -85,57 +85,30 @@ public class Main implements EntryPoint {
 	private void producePuzzle(Element text) {
 
 		preprocessText(text);
-		
-		NodeList<Element> divs = text.getElementsByTagName(GAP_ELEMENT);
 
 		dragController = new PickupDragController(RootPanel.get(), false);
 		choicesPanel = new FlowPanel();
 		RootPanel.get(ID_choicesPanel).add(choicesPanel);
 
 		final List<String> entries = new ArrayList<String>();
-
-		int length = divs.getLength();
-		int longestText = 0;
-		for (int i = 0; i < length; i++) {
-			Element item = divs.getItem(i);
-
-			String nodeValue = item.getInnerText();
-			entries.add(nodeValue);
-
-			String idVal = createId(i);
-			item.setAttribute(ID, idVal);
-
-			int nodeTextLen = nodeValue.length();
-
-			if (nodeTextLen > longestText) {
-				longestText = nodeTextLen;
-			}
-
+		NodeList<Element> emElements = text.getElementsByTagName(GAP_ELEMENT);
+		NodeList<Element> iElements = text.getElementsByTagName(GAP_ELEMENT_2);
+		int longestText = processElements(emElements, entries,GAP_ELEMENT);
+		int longestText2 = processElements(iElements, entries,GAP_ELEMENT_2);
+		if (longestText2 > longestText) {
+			longestText = longestText2;
 		}
 
-		{
-			//sort the choices alphabetically
-			List<String> displayedEntries = new ArrayList<String>(entries);
-			Comparator<String> comparator=new Comparator<String>() {
+		List<String> displayedEntries = sortChoices(entries);
 
-				public int compare(String o1, String o2) {
-					return o1.compareToIgnoreCase(o2);
-				}
-			};
-
-			Collections.sort(displayedEntries, comparator);
-			
-			for (String string : displayedEntries) {
-				createChoice(string);
-			}
+		for (String string : displayedEntries) {
+			createChoice(string);
 		}
 
 		String textWithIds = text.getInnerHTML();
 		// now remove the ids:
-		for (int i = 0; i < length; i++) {
-			Element item = divs.getItem(i);
-			item.removeAttribute(ID);
-		}
+		removeIds(emElements);
+		removeIds(iElements);
 
 		// make it possible to drag words back from the text:
 		SimpleDropController choicesPanelDropController = new SimpleDropController(
@@ -153,18 +126,8 @@ public class Main implements EntryPoint {
 		puzzleArea = new HTMLPanel(textWithIds);
 		final List<FlowPanel> gaps = new ArrayList<FlowPanel>();
 
-		for (int i = 0; i < length; i++) {
-
-			final FlowPanel l = createGapPanel(longestText);
-
-			gaps.add(l);
-
-			SimpleDropController sdc = createDropController(l);
-
-			dragController.registerDropController(sdc);
-			String idVal = createId(i);
-			puzzleArea.addAndReplaceElement(l, idVal);
-		}
+		createGaps(GAP_ELEMENT,emElements, longestText, gaps);
+		createGaps(GAP_ELEMENT_2,iElements, longestText, gaps);
 
 		RootPanel.get(ID_puzzleArea).add(puzzleArea);
 
@@ -175,48 +138,106 @@ public class Main implements EntryPoint {
 
 	}
 
+	private void createGaps(String tag, NodeList<Element> emElements, int longestText,
+			final List<FlowPanel> gaps) {
+		for (int i = 0; i < emElements.getLength(); i++) {
+
+			final FlowPanel l = createGapPanel(longestText);
+
+			gaps.add(l);
+
+			SimpleDropController sdc = createDropController(l);
+
+			dragController.registerDropController(sdc);
+			String idVal = createId(tag,i);
+			puzzleArea.addAndReplaceElement(l, idVal);
+		}
+	}
+
+	private void removeIds(NodeList<Element> emElements) {
+		for (int i = 0; i < emElements.getLength(); i++) {
+			Element item = emElements.getItem(i);
+			item.removeAttribute(ID);
+		}
+	}
+
+	private List<String> sortChoices(final List<String> entries) {
+		// sort the choices alphabetically
+		List<String> displayedEntries = new ArrayList<String>(entries);
+		Comparator<String> comparator = new Comparator<String>() {
+
+			public int compare(String o1, String o2) {
+				return o1.compareToIgnoreCase(o2);
+			}
+		};
+
+		Collections.sort(displayedEntries, comparator);
+		return displayedEntries;
+	}
+
+	private int processElements(NodeList<Element> divs,
+			final List<String> entries, String tag) {
+		int longestText = 0;
+		for (int i = 0; i < divs.getLength(); i++) {
+			Element item = divs.getItem(i);
+
+			String nodeValue = item.getInnerText();
+			entries.add(nodeValue);
+
+			String idVal = createId(tag,i);
+			item.setAttribute(ID, idVal);
+
+			int nodeTextLen = nodeValue.length();
+
+			if (nodeTextLen > longestText) {
+				longestText = nodeTextLen;
+			}
+
+		}
+		return longestText;
+	}
+
 	private void preprocessText(Element text) {
 		String innerHTML = text.getInnerHTML();
 
 		String[] split = innerHTML.split(DELIMITER);
-		if(split.length<2){
+		if (split.length < 2) {
 			return;
 		}
-		
-		StringBuilder sb=new StringBuilder();
 
-		String openGap="<"+GAP_ELEMENT+">";
-		String closeGap="</"+GAP_ELEMENT+">";
-		boolean elementOpen=false;
-		
-		for(int i=0; i<split.length; i++){
+		StringBuilder sb = new StringBuilder();
 
-			String s=split[i];
-			
+		String openGap = "<" + GAP_ELEMENT + ">";
+		String closeGap = "</" + GAP_ELEMENT + ">";
+		boolean elementOpen = false;
+
+		for (int i = 0; i < split.length; i++) {
+
+			String s = split[i];
+
 			sb.append(s);
-			
-			if(elementOpen){
+
+			if (elementOpen) {
 				sb.append(closeGap);
-				elementOpen=false;
-			}
-			else if(i<(split.length-1)){
+				elementOpen = false;
+			} else if (i < (split.length - 1)) {
 				sb.append(openGap);
-				elementOpen=true;
+				elementOpen = true;
 			}
-			
-			
+
 		}
-		
-		//if there was an error (i.e. odd number or hashmarks), close the last gap:
-		if(elementOpen){
+
+		// if there was an error (i.e. odd number or hashmarks), close the last
+		// gap:
+		if (elementOpen) {
 			sb.append(closeGap);
 		}
-		
+
 		text.setInnerHTML(sb.toString());
 	}
 
-	private String createId(int i) {
-		String idVal = "__id_" + i;
+	private String createId(String tag,int i) {
+		String idVal = "__id_" +tag+i;
 		return idVal;
 	}
 
@@ -248,31 +269,31 @@ public class Main implements EntryPoint {
 				}
 
 				String msg;
-				
-				if(errors==0 && unfilledCount==0){
+
+				if (errors == 0 && unfilledCount == 0) {
 					msg = getCorrectMsg();
-				}else if(errors==0){
-					msg=getUnfillesMsg(unfilledCount);
-				}
-				else if(unfilledCount==0){
-					msg=getErrorsMsg(errors);
-				}
-				else{
-					msg=getErrorsAndUnfilledMsg(errors, unfilledCount);
+				} else if (errors == 0) {
+					msg = getUnfillesMsg(unfilledCount);
+				} else if (unfilledCount == 0) {
+					msg = getErrorsMsg(errors);
+				} else {
+					msg = getErrorsAndUnfilledMsg(errors, unfilledCount);
 				}
 
 				final DialogBox dialogBox = new DialogBox(false, true);
 				dialogBox.setText(getDialogTitle());
-				VerticalPanel vp=new VerticalPanel();
+				VerticalPanel vp = new VerticalPanel();
 				dialogBox.setWidget(vp);
 				HTML msgLabel = new HTML(msg);
 				vp.add(msgLabel);
-				vp.setCellHorizontalAlignment(msgLabel, HasHorizontalAlignment.ALIGN_LEFT);
-				Button closeButton=new Button(getDialogOK());
+				vp.setCellHorizontalAlignment(msgLabel,
+						HasHorizontalAlignment.ALIGN_LEFT);
+				Button closeButton = new Button(getDialogOK());
 				vp.add(closeButton);
-				vp.setCellHorizontalAlignment(closeButton, HasHorizontalAlignment.ALIGN_RIGHT);
+				vp.setCellHorizontalAlignment(closeButton,
+						HasHorizontalAlignment.ALIGN_RIGHT);
 				closeButton.addClickHandler(new ClickHandler() {
-					
+
 					public void onClick(ClickEvent event) {
 						dialogBox.hide();
 					}
@@ -303,14 +324,17 @@ public class Main implements EntryPoint {
 		msg = MessageFormat.format(msg, unfilledCount);
 		return msg;
 	}
+
 	private String getErrorsMsg(int errorCount) {
 		String msg = RootPanel.get(ID_errorsMsg).getElement().getInnerText();
 		msg = MessageFormat.format(msg, errorCount);
 		return msg;
 	}
+
 	private String getErrorsAndUnfilledMsg(int errorCount, int unfilledCount) {
-		String msg = RootPanel.get(ID_errorsAndUnfilledMsg).getElement().getInnerText();
-		msg = MessageFormat.format(msg, errorCount,unfilledCount);
+		String msg = RootPanel.get(ID_errorsAndUnfilledMsg).getElement()
+				.getInnerText();
+		msg = MessageFormat.format(msg, errorCount, unfilledCount);
 		return msg;
 	}
 
