@@ -377,3 +377,18 @@ fieldset th {
 	height: 11px;
 	width: 16px;
 }
+
+ #_s_com_ck_rt1_model_Exercise_content_content_id {
+	white-space: pre;
+	font-family: monospace;
+}
+
+#_s_com_ck_rt1_model_Stylesheet_content_content_id {
+	white-space: pre;
+	font-family: monospace;
+}
+
+#_s_com_ck_rt1_model_Template_content_content_id {
+	white-space: pre;
+	font-family: monospace;
+}
